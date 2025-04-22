@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lina | Hotel Aramé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --sidebar-bg: #ffffff;
+            --text-color: #333333;
+            --chat-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --user-msg-bg: #f0f7ff;
+            --assistant-msg-bg: #f5f5f5;
+            --input-bg: #ffffff;
+            --primary-color: #666666;
+            --quick-btn-bg: #f9f9f9;
+            --quick-btn-hover: #efefef;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .sidebar-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .sidebar-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .sidebar-info {
+            font-size: 12px;
+            color: rgba(51, 51, 51, 0.6);
+        }
+        
+        .guest-info {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-item {
+            margin-bottom: 12px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: rgba(51, 51, 51, 0.6);
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+        }
+        
+        .action-buttons {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .action-button {
+            padding: 12px;
+            border-radius: 6px;
+            background-color: var(--quick-btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-button:hover {
+            background-color: var(--quick-btn-hover);
+        }
+        
+        .preferences-button {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Main Chat */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: var(--chat-bg);
+        }
+        
+        .chat-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .hotel-brand {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hotel-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--bg-color);
+        }
+        
+        .header-actions a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 16px;
+        }
+        
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-wrapper {
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px;
+            display: flex;
+        }
+        
+        .message-wrapper.user {
+            background-color: var(--user-msg-bg);
+        }
+        
+        .message-wrapper.assistant {
+            background-color: var(--assistant-msg-bg);
+        }
+        
+        .message-content {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            line-height: 1.5;
+        }
+        
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 2px;
+            margin-right: 16px;
+            margin-top: 4px;
+        }
+        
+        .message-avatar img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .message-avatar.user {
+            background-color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        /* Input area */
+        .input-container {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        
+        .message-input {
+            width: 100%;
+            padding: 16px;
+            padding-right: 40px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            height: 56px;
+            overflow-y: hidden;
+            line-height: 1.5;
+        }
+        
+        .send-button {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Quick Options */
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .quick-option {
+            padding: 8px 16px;
+            border-radius: 16px;
+            background-color: var(--quick-btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .quick-option:hover {
+            background-color: var(--quick-btn-hover);
+        }
+        
+        /* Mobile responsiveness */
+        .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .mobile-close {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        /* Loading indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 0;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            30% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
+        }
+        
+        /* Preference Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: var(--chat-bg);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+        }
+        
+        .modal-body {
+            padding: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .modal-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        .modal-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-cancel {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .btn-save {
+            background-color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            color: var(--bg-color);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                height: 100%;
+                z-index: 100;
+                transition: left 0.3s ease;
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .mobile-close {
+                display: block;
+            }
+            
+            .hotel-logo {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="mobile-close" id="mobile-close">
+            <i data-feather="x"></i>
+        </div>
+        
+        <div class="sidebar-header">
+            <div class="sidebar-avatar">
+                <img src="https://images.unsplash.com/photo-1594751684241-bcef6f2a6d27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2llcmdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Lina">
+            </div>
+            <div>
+                <div class="sidebar-title">Lina</div>
+                <div class="sidebar-info">Concierge Digital</div>
+            </div>
+        </div>
+        
+        <div class="guest-info">
+            <div class="info-item">
+                <div class="info-label">Nombre</div>
+                <div class="info-value" id="sidebar-guest-name">{{ guest.name }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Habitación</div>
+                <div class="info-value">{{ guest.room_number }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Check-in</div>
+                <div class="info-value">{{ guest.check_in_date.strftime('%d/%m/%Y') }}</div>
+            </div>
+            {% if guest.check_out_date %}
+            <div class="info-item">
+                <div class="info-label">Check-out</div>
+                <div class="info-value">{{ guest.check_out_date.strftime('%d/%m/%Y') }}</div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="action-buttons">
+            <button class="action-button" data-action="room-service">
+                <i data-feather="coffee"></i>
+                Ordenar Room Service
+            </button>
+            <button class="action-button" data-action="transportation">
+                <i data-feather="truck"></i>
+                Solicitar Transporte
+            </button>
+            <button class="action-button" data-action="recommendations">
+                <i data-feather="map-pin"></i>
+                Recomendaciones
+            </button>
+            <button class="action-button" data-action="hotel-info">
+                <i data-feather="info"></i>
+                Información del Hotel
+            </button>
+        </div>
+        
+        <div class="preferences-button">
+            <button class="action-button" id="open-preferences">
+                <i data-feather="settings"></i>
+                Mis Preferencias
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main Chat Area -->
+    <div class="main">
+        <div class="chat-header">
+            <div class="hotel-brand">
+                <div class="mobile-toggle" id="mobile-toggle">
+                    <i data-feather="menu"></i>
+                </div>
+                <div class="hotel-logo">A</div>
+                <span>Hotel Aramé</span>
+            </div>
+            <div class="header-actions">
+                <a href="{{ url_for('index') }}">
+                    <i data-feather="home" style="width: 20px; height: 20px;"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div id="chat-messages" class="messages-container">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea id="message-input" class="message-input" placeholder="Mensaje a Lina..." rows="1"></textarea>
+                <button id="send-button" class="send-button">
+                    <i data-feather="send" style="width: 20px; height: 20px;"></i>
+                </button>
+            </div>
+            
+            <div class="quick-options" id="quick-options">
+                <button class="quick-option" data-message="¿Qué incluye el desayuno?">Desayuno del hotel</button>
+                <button class="quick-option" data-message="Recomiéndame restaurantes cercanos">Restaurantes cercanos</button>
+                <button class="quick-option" data-message="¿Cómo llego al centro de Medellín?">Cómo llegar al centro</button>
+                <button class="quick-option" data-message="¿Qué me recomiendas hacer hoy?">Recomendaciones del día</button>
+                <button class="quick-option" data-message="Quiero ordenar servicio a la habitación">Room service</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preferences Modal -->
+    <div class="modal" id="preferences-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Mis Preferencias</div>
+                <button class="modal-close" id="close-preferences">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="preferences-form">
+                    <div class="form-group">
+                        <label class="form-label">¿Cuál es el propósito de tu viaje?</label>
+                        <select class="form-control" id="pref-trip-type">
+                            <option value="">Selecciona una opción</option>
+                            <option value="business">Negocios</option>
+                            <option value="leisure">Vacaciones</option>
+                            <option value="family">Viaje familiar</option>
+                            <option value="couple">Viaje en pareja</option>
+                            <option value="solo">Viaje solo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">¿Qué te interesa?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-gastronomy" value="gastronomy">
+                                <label for="pref-gastronomy">Gastronomía</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-culture" value="culture">
+                                <label for="pref-culture">Cultura</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-adventure" value="adventure">
+                                <label for="pref-adventure">Aventura</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-nature" value="nature">
+                                <label for="pref-nature">Naturaleza</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-shopping" value="shopping">
+                                <label for="pref-shopping">Compras</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-nightlife" value="nightlife">
+                                <label for="pref-nightlife">Vida nocturna</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preferencias alimentarias</label>
+                        <select class="form-control" id="pref-diet">
+                            <option value="">Sin preferencias</option>
+                            <option value="vegetarian">Vegetariano</option>
+                            <option value="vegan">Vegano</option>
+                            <option value="gluten-free">Sin gluten</option>
+                            <option value="lactose-free">Sin lactosa</option>
+                            <option value="kosher">Kosher</option>
+                            <option value="halal">Halal</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Transporte preferido</label>
+                        <select class="form-control" id="pref-transport">
+                            <option value="taxi">Taxi</option>
+                            <option value="private">Auto privado</option>
+                            <option value="luxury">Auto de lujo</option>
+                            <option value="public">Transporte público</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button btn-cancel" id="cancel-preferences">Cancelar</button>
+                <button class="modal-button btn-save" id="save-preferences">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        let isTyping = false;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Feather icons
+            feather.replace();
+            
+            const guest = {
+                id: {{ guest.id }},
+                name: "{{ guest.name }}",
+                room: "{{ guest.room_number }}"
+            };
+            
+            // Store guest info globally
+            window.currentGuest = guest;
+            
+            // Auto-resize textarea
+            const textarea = document.getElementById('message-input');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                // Limit to 150px height
+                if (parseInt(this.style.height) > 150) {
+                    this.style.height = '150px';
+                    this.style.overflowY = 'auto';
+                } else {
+                    this.style.overflowY = 'hidden';
+                }
+            });
+            
+            // Setup all event listeners
+            setupEventListeners();
+            
+            // Send automatic first message after a short delay
+            setTimeout(() => sendWelcomeMessage(), 1000);
+        });
+        
+        function setupEventListeners() {
+            // Mobile menu toggle
+            document.getElementById('mobile-toggle').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.add('active');
+            });
+            
+            document.getElementById('mobile-close').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.remove('active');
+            });
+            
+            // Message submission (both button and enter key)
+            const sendButton = document.getElementById('send-button');
+            const messageInput = document.getElementById('message-input');
+            
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Quick options
+            document.querySelectorAll('.quick-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    messageInput.value = button.getAttribute('data-message');
+                    sendMessage();
+                });
+            });
+            
+            // Action buttons
+            document.querySelectorAll('.action-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.getAttribute('data-action');
+                    if (!action) return;
+                    
+                    // Handle specific actions
+                    switch (action) {
+                        case 'room-service':
+                            messageInput.value = "Quiero ordenar servicio a la habitación";
+                            break;
+                        case 'transportation':
+                            messageInput.value = "Necesito programar un transporte";
+                            break;
+                        case 'recommendations':
+                            messageInput.value = "¿Qué me recomiendas hacer hoy en Medellín?";
+                            break;
+                        case 'hotel-info':
+                            messageInput.value = "¿Qué servicios ofrece el hotel?";
+                            break;
+                    }
+                    
+                    // Close mobile sidebar
+                    document.getElementById('sidebar').classList.remove('active');
+                    
+                    // Send the message
+                    sendMessage();
+                });
+            });
+            
+            // Preferences modal
+            const preferencesModal = document.getElementById('preferences-modal');
+            
+            document.getElementById('open-preferences').addEventListener('click', () => {
+                // Load current preferences here if needed
+                preferencesModal.classList.add('active');
+            });
+            
+            document.getElementById('close-preferences').addEventListener('click', () => {
+                preferencesModal.classList.remove('active');
+            });
+            
+            document.getElementById('cancel-preferences').addEventListener('click', () => {
+                preferencesModal.classList.remove('active');
+            });
+            
+            document.getElementById('save-preferences').addEventListener('click', savePreferences);
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Clear input and reset height
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Add user message to chat
+            addMessageToChat(message, 'user');
+            
+            // Show typing indicator
+            addTypingIndicator();
+            
+            // Send message to backend
+            axios.post('/api/send-message', {
+                guest_id: window.currentGuest.id,
+                message: message
+            })
+            .then(response => {
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add assistant's response
+                if (response.data && response.data.response) {
+                    addMessageToChat(response.data.response, 'assistant');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+                removeTypingIndicator();
+                addMessageToChat('Lo siento, tuve un problema al procesar tu mensaje. ¿Puedes intentarlo de nuevo?', 'assistant');
+            });
+            
+            // Scroll to bottom
+            scrollToBottom();
+        }
+        
+        function addMessageToChat(message, sender) {
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Create message wrapper
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = `message-wrapper ${sender}`;
+            
+            // Add avatar
+            let avatarHtml = '';
+            if (sender === 'user') {
+                const initials = getInitials(window.currentGuest.name);
+                avatarHtml = `<div class="message-avatar user">${initials}</div>`;
+            } else {
+                avatarHtml = `<div class="message-avatar"><img src="https://images.unsplash.com/photo-1594751684241-bcef6f2a6d27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2llcmdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Lina"></div>`;
+            }
+            
+            // Format message content with line breaks and links
+            let formattedMessage = message;
+            if (sender === 'assistant') {
+                // Handle line breaks
+                formattedMessage = message.replace(/\n/g, '<br>');
+                
+                // Handle basic markdown for links using regex
+                formattedMessage = formattedMessage.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #acacbe; text-decoration: underline;">$1</a>');
+            }
+            
+            // Create message HTML
+            messageWrapper.innerHTML = `
+                ${avatarHtml}
+                <div class="message-content">${formattedMessage}</div>
+            `;
+            
+            messagesContainer.appendChild(messageWrapper);
+            scrollToBottom();
+        }
+        
+        function addTypingIndicator() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Create message wrapper
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = 'message-wrapper assistant';
+            messageWrapper.id = 'typing-indicator-wrapper';
+            
+            // Create typing indicator
+            messageWrapper.innerHTML = `
+                <div class="message-avatar"><img src="https://images.unsplash.com/photo-1594751684241-bcef6f2a6d27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2llcmdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Lina"></div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageWrapper);
+            scrollToBottom();
+        }
+        
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator-wrapper');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isTyping = false;
+        }
+        
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        }
+        
+        function savePreferences() {
+            // Collect preferences
+            const tripType = document.getElementById('pref-trip-type').value;
+            
+            // Collect interests
+            const interests = [];
+            document.querySelectorAll('#preferences-form input[type="checkbox"]:checked').forEach(checkbox => {
+                interests.push(checkbox.value);
+            });
+            
+            const diet = document.getElementById('pref-diet').value;
+            const transport = document.getElementById('pref-transport').value;
+            
+            // Construct preferences object
+            const preferences = {
+                trip_type: tripType,
+                interests: interests,
+                diet: diet,
+                transport: transport
+            };
+            
+            console.log('Saving preferences:', preferences);
+            
+            // Here you would send this to your backend API
+            // For now, just close the modal and add a confirmation message
+            document.getElementById('preferences-modal').classList.remove('active');
+            
+            // Add confirmation message in chat
+            addMessageToChat('¡Genial! He guardado tus preferencias y las usaré para personalizar mis recomendaciones. ¿Qué te gustaría hacer ahora?', 'assistant');
+        }
+        
+        function sendWelcomeMessage() {
+            // Different welcome messages based on time of day
+            const hour = new Date().getHours();
+            let greeting = "Hola";
+            
+            if (hour < 12) {
+                greeting = "¡Buenos días";
+            } else if (hour < 18) {
+                greeting = "¡Buenas tardes";
+            } else {
+                greeting = "¡Buenas noches";
+            }
+            
+            // Get first name only
+            const firstName = window.currentGuest.name.split(' ')[0];
+            
+            const welcomeMessage = `${greeting}, ${firstName}! Soy Lina, tu asistente personal durante tu estadía en el Hotel Aramé. 
+
+Estoy aquí para ayudarte con cualquier cosa que necesites:
+• Recomendaciones locales
+• Servicio a la habitación
+• Programar transporte
+• Información sobre el hotel y la ciudad
+
+¿En qué puedo ayudarte hoy?`;
+            
+            addMessageToChat(welcomeMessage, 'assistant');
+        }
+    </script>
+</body>
+</html>

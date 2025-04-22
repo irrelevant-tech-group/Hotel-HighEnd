@@ -1,0 +1,90 @@
+{
+    "wifi": {
+        "question": "¿Cuál es la clave del WiFi?",
+        "answer": "La red WiFi se llama 'Hotel Aramé' y la contraseña es 'ArameLuxury2023'. Tienes cobertura en todo el hotel."
+    },
+    "breakfast": {
+        "question": "¿Cuál es el horario del desayuno?",
+        "answer": "El desayuno se sirve en el Restaurante principal, ubicado en el piso 1, en horario de 06:30 a 10:30 todos los días."
+    },
+    "checkout": {
+        "question": "¿A qué hora es el check-out?",
+        "answer": "El check-out es a las 12:00 del mediodía. Si necesitas una hora de salida más tarde, por favor avísanos con anticipación y haremos lo posible por acomodarte, sujeto a disponibilidad."
+    },
+    "pool": {
+        "question": "¿Dónde está la piscina y cuál es su horario?",
+        "answer": "La piscina se encuentra en la Terraza del piso 8 y está abierta de 07:00 a 20:00 todos los días. Contamos con toallas disponibles en el área de la piscina."
+    },
+    "spa": {
+        "question": "¿Dónde queda el spa?",
+        "answer": "El spa está ubicado en el piso 2 y opera de 10:00 a 19:00. Para reservar un tratamiento, puedes llamar a la extensión 123 o pedirme que lo reserve por ti."
+    },
+    "gym": {
+        "question": "¿El hotel tiene gimnasio?",
+        "answer": "Sí, nuestro gimnasio está en el piso 3 y está disponible las 24 horas para huéspedes. Contamos con equipo cardiovascular, pesas y área de estiramiento."
+    },
+    "roomservice": {
+        "question": "¿Cuál es el horario del servicio a la habitación?",
+        "answer": "El servicio a la habitación está disponible de 7:00 AM a 10:00 PM. Puedes ordenar directamente conmigo o llamando a la extensión 100."
+    },
+    "restaurants": {
+        "question": "¿Qué restaurantes hay en el hotel?",
+        "answer": "El Hotel Aramé cuenta con nuestro restaurante principal 'Aromé' que sirve gastronomía local e internacional, y nuestro bar-lounge 'Altitud' en la terraza con vistas a la ciudad."
+    },
+    "transportation": {
+        "question": "¿Cómo puedo conseguir transporte?",
+        "answer": "Puedo ayudarte a programar un taxi, servicio privado o transfers al aeropuerto. Solo indícame cuándo lo necesitas y tu destino, y me encargaré de organizarlo por ti."
+    },
+    "touristinfo": {
+        "question": "¿Qué lugares turísticos recomiendas visitar en Medellín?",
+        "answer": "Medellín tiene muchos lugares fascinantes como el Parque Arví, Plaza Botero, Jardín Botánico, Pueblito Paisa y el Museo de Antioquia. Puedo darte recomendaciones personalizadas si me dices qué te interesa."
+    },
+    "airportinfo": {
+        "question": "¿Cómo llego al aeropuerto?",
+        "answer": "El Aeropuerto Internacional José María Córdova está a aproximadamente 45 minutos en auto desde el hotel. Puedo ayudarte a organizar un traslado privado por COP 90.000 o puedes tomar un taxi que cuesta alrededor de COP 80.000."
+    },
+    "laundry": {
+        "question": "¿Tienen servicio de lavandería?",
+        "answer": "Sí, ofrecemos servicio de lavandería. Puedes encontrar la lista de precios y una bolsa para tu ropa en el armario de tu habitación. Si dejas tu ropa antes de las 9:00 AM, la tendrás de vuelta el mismo día por la tarde."
+    },
+    "parking": {
+        "question": "¿Tienen estacionamiento?",
+        "answer": "Sí, el hotel cuenta con estacionamiento cubierto para huéspedes sin costo adicional. Está ubicado en el sótano y puedes acceder con tu llave de habitación."
+    },
+    "currency": {
+        "question": "¿Dónde puedo cambiar dinero?",
+        "answer": "Ofrecemos servicio de cambio de divisas en la recepción para cantidades pequeñas. Para montos mayores, hay varias casas de cambio en el Centro Comercial El Tesoro, a 10 minutos del hotel."
+    },
+    "meetings": {
+        "question": "¿Tienen salas de reuniones?",
+        "answer": "Sí, contamos con tres salas de reuniones equipadas con tecnología audiovisual. La más grande tiene capacidad para 50 personas. Para reservas y tarifas, puedes hablar con nuestro departamento de eventos en la extensión 150."
+    },
+    "sustainability": {
+        "question": "¿Qué prácticas sostenibles tiene el hotel?",
+        "answer": "El Hotel Aramé está comprometido con el medio ambiente. Utilizamos energía solar, reciclamos agua para jardines, evitamos plásticos de un solo uso y trabajamos con productores locales para reducir nuestra huella de carbono."
+    },
+    "accessibility": {
+        "question": "¿El hotel es accesible para personas con movilidad reducida?",
+        "answer": "Sí, nuestro hotel cuenta con rampas de acceso, ascensores amplios, y habitaciones adaptadas con baños accesibles. Todo el personal está capacitado para asistir a huéspedes con necesidades especiales."
+    },
+    "childrenpolicy": {
+        "question": "¿Tienen servicios para niños?",
+        "answer": "Los niños son bienvenidos en Hotel Aramé. Ofrecemos cunas sin costo adicional, menú infantil en el restaurante, y servicio de niñera con reserva previa. También tenemos una pequeña área de juegos en el piso 1."
+    },
+    "petpolicy": {
+        "question": "¿Aceptan mascotas?",
+        "answer": "Aceptamos mascotas pequeñas (hasta 10 kg) con un cargo adicional de COP 80.000 por estadía. Proporcionamos cama para mascotas, platos de comida y agua, y un kit de bienvenida. Por favor, notifica al hotel con anticipación."
+    },
+    "checkoutextension": {
+        "question": "¿Puedo hacer late check-out?",
+        "answer": "El late check-out está sujeto a disponibilidad. Hasta las 14:00 tiene un cargo del 30% de la tarifa, hasta las 18:00 un 50%, y después de las 18:00 se cobra una noche adicional. Por favor solicítalo con anticipación."
+    },
+    "roomtypes": {
+        "question": "¿Qué tipos de habitaciones tienen?",
+        "answer": "El hotel ofrece habitaciones Deluxe (30 m²), Junior Suites (45 m²) y Suites Ejecutivas (60 m²). Todas incluyen amenidades premium, caja fuerte, minibar y vista a la ciudad o a la montaña."
+    },
+    "security": {
+        "question": "¿Es seguro el hotel y los alrededores?",
+        "answer": "El Hotel Aramé cuenta con seguridad 24/7, cámaras y acceso controlado. El barrio El Poblado es considerado una de las zonas más seguras de Medellín. De todas formas, recomendamos las precauciones habituales al salir."
+    }
+}

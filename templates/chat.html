@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat con Lina | Hotel Aramé</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body class="luxury-theme">
+    <!-- Top notification bar -->
+    <div class="top-notification-bar">
+        <div class="container">
+            <p>Servicio personalizado 24/7. ¿Necesita algo especial? Marque 0 desde el teléfono de su habitación o consulte a Lina.</p>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="container d-flex justify-content-between align-items-center py-4">
+            <div class="logo">
+                <h1>Hotel Aramé</h1>
+                <span class="tagline">LUXURY EXPERIENCE</span>
+            </div>
+            <nav class="main-nav d-none d-md-block">
+                <ul class="nav">
+                    <li class="nav-item"><a href="#" class="nav-link">Alojamiento</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Experiencias</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Gastronomía</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Galería</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Promociones</a></li>
+                </ul>
+            </nav>
+            <div class="d-flex align-items-center">
+                <div class="language-selector me-3">
+                    <select class="form-select form-select-sm border-0 bg-transparent">
+                        <option value="es">ES</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="{{ url_for('index') }}" class="btn btn-luxury-secondary">
+                    <i data-feather="home" class="me-2"></i>Inicio
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-10">
+                    <div class="section-title text-center">
+                        <h2>Asistente Personal</h2>
+                        <p class="lead">Lina está aquí para ayudarle con todo lo que necesite durante su estadía</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Chat Interface -->
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <div class="assistant-info">
+                                <div class="assistant-avatar">
+                                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8VXNlciUyMEF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Lina Avatar">
+                                </div>
+                                <div class="assistant-name">
+                                    <h3>Lina</h3>
+                                    <p>Concierge Digital | Hotel Aramé</p>
+                                </div>
+                            </div>
+                            <div class="chat-actions">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#faqModal">
+                                    <i data-feather="help-circle"></i>
+                                </a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#preferencesModal">
+                                    <i data-feather="settings"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div id="chat-messages" class="chat-messages">
+                            <!-- Messages will be added here dynamically -->
+                        </div>
+                        
+                        <div class="chat-input">
+                            <form id="message-form">
+                                <div class="d-flex gap-3">
+                                    <input type="text" id="message-input" class="form-control" placeholder="Escriba su mensaje..." autocomplete="off">
+                                    <button type="submit" class="btn-send">
+                                        <i data-feather="send"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <div class="quick-actions" id="quick-actions">
+                                <button class="quick-action-btn" data-message="¿Qué opciones hay para desayunar?">
+                                    <i data-feather="coffee" class="me-1"></i> Desayuno
+                                </button>
+                                <button class="quick-action-btn" data-message="¿Puedes recomendar restaurantes cerca?">
+                                    <i data-feather="map-pin" class="me-1"></i> Restaurantes
+                                </button>
+                                <button class="quick-action-btn" data-message="¿Qué servicios ofrece el hotel?">
+                                    <i data-feather="info" class="me-1"></i> Servicios
+                                </button>
+                                <button class="quick-action-btn" data-message="Necesito un taxi para más tarde">
+                                    <i data-feather="truck" class="me-1"></i> Transporte
+                                </button>
+                                <button class="quick-action-btn" data-message="¿Qué puedo hacer hoy en Medellín?">
+                                    <i data-feather="map" class="me-1"></i> Actividades
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="luxury-card mb-4">
+                        <div class="luxury-card-header">
+                            <h3>Información del Huésped</h3>
+                        </div>
+                        <div class="luxury-card-body">
+                            <div class="guest-info">
+                                <div class="guest-info-item">
+                                    <div class="guest-info-label">
+                                        <i data-feather="user"></i>
+                                        <span>Nombre</span>
+                                    </div>
+                                    <div class="guest-info-value" id="guest-name">{{ guest.name }}</div>
+                                </div>
+                                
+                                <div class="guest-info-item">
+                                    <div class="guest-info-label">
+                                        <i data-feather="home"></i>
+                                        <span>Habitación</span>
+                                    </div>
+                                    <div class="guest-info-value">{{ guest.room_number }}</div>
+                                </div>
+                                
+                                <div class="guest-info-item">
+                                    <div class="guest-info-label">
+                                        <i data-feather="calendar"></i>
+                                        <span>Check-in</span>
+                                    </div>
+                                    <div class="guest-info-value">{{ guest.check_in_date.strftime('%d/%m/%Y') }}</div>
+                                </div>
+                                
+                                {% if guest.check_out_date %}
+                                <div class="guest-info-item">
+                                    <div class="guest-info-label">
+                                        <i data-feather="calendar"></i>
+                                        <span>Check-out</span>
+                                    </div>
+                                    <div class="guest-info-value">{{ guest.check_out_date.strftime('%d/%m/%Y') }}</div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="luxury-card mb-4">
+                        <div class="luxury-card-header">
+                            <h3>Servicios Exclusivos</h3>
+                        </div>
+                        <div class="luxury-card-body">
+                            <div class="exclusive-services">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i data-feather="coffee"></i>
+                                    </div>
+                                    <div class="service-content">
+                                        <h4>Room Service</h4>
+                                        <p>Disponible 24 horas. Solicite a Lina nuestro menú gourmet.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i data-feather="truck"></i>
+                                    </div>
+                                    <div class="service-content">
+                                        <h4>Transporte Ejecutivo</h4>
+                                        <p>Solicite su transporte privado con al menos 2 horas de anticipación.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i data-feather="map"></i>
+                                    </div>
+                                    <div class="service-content">
+                                        <h4>Tours Exclusivos</h4>
+                                        <p>Experiencias personalizadas para conocer lo mejor de Medellín.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i data-feather="award"></i>
+                                    </div>
+                                    <div class="service-content">
+                                        <h4>Conserje Personal</h4>
+                                        <p>Reservas en restaurantes, eventos y experiencias únicas.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="luxury-card">
+                        <div class="luxury-card-header">
+                            <h3>Tiempo en Medellín</h3>
+                        </div>
+                        <div class="luxury-card-body">
+                            <div class="weather-widget text-center">
+                                <div class="weather-icon mb-3">
+                                    <i data-feather="sun" style="width: 60px; height: 60px; color: var(--luxury-gold);"></i>
+                                </div>
+                                <div class="weather-temp mb-2">
+                                    <span class="display-4">27°C</span>
+                                </div>
+                                <div class="weather-condition mb-4">
+                                    <span>Soleado</span>
+                                </div>
+                                <div class="weather-details d-flex justify-content-around">
+                                    <div class="weather-detail">
+                                        <div><i data-feather="droplet"></i></div>
+                                        <span>40%</span>
+                                    </div>
+                                    <div class="weather-detail">
+                                        <div><i data-feather="wind"></i></div>
+                                        <span>8 km/h</span>
+                                    </div>
+                                    <div class="weather-detail">
+                                        <div><i data-feather="sunrise"></i></div>
+                                        <span>6:05 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FAQ Modal -->
+    <div class="modal fade" id="faqModal" tabindex="-1" aria-labelledby="faqModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content luxury-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="faqModalLabel">Preguntas Frecuentes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item bg-transparent border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-white border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                                    ¿Cuál es el horario del desayuno?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    El desayuno se sirve en nuestro restaurante principal de 6:30 AM a 10:30 AM. Para huéspedes con salidas temprano, ofrecemos servicio de desayuno en la habitación desde las 5:00 AM.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-transparent border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-white border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                                    ¿A qué hora es el check-out?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    El check-out es a las 12:00 PM. Si necesita extender su estadía, comuníquese con recepción antes de las 10:00 AM para verificar disponibilidad. El late check-out hasta las 4:00 PM tiene un costo adicional del 50% de la tarifa por noche.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-transparent border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-white border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                                    ¿Cómo puedo solicitar servicio a la habitación?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Puede solicitar servicio a la habitación las 24 horas a través de Lina. Simplemente pídale el menú y realice su pedido. También puede marcar el 1 desde el teléfono de su habitación.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-transparent border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-white border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                                    ¿Hay WiFi disponible?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sí, ofrecemos WiFi gratuito de alta velocidad en todas las habitaciones y áreas comunes. La red es "Arame_Guest" y la contraseña se encuentra en su tarjeta de bienvenida o puede solicitarla a Lina.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-transparent border-0 mb-3">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-white border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                                    ¿Cuál es el horario de la piscina y el spa?
+                                </button>
+                            </h2>
+                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    La piscina está abierta de 6:00 AM a 10:00 PM. El spa opera de 9:00 AM a 9:00 PM. Recomendamos reservar los tratamientos de spa con anticipación para garantizar disponibilidad.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-luxury-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preferences Modal -->
+    <div class="modal fade" id="preferencesModal" tabindex="-1" aria-labelledby="preferencesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content luxury-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="preferencesModalLabel">Sus Preferencias</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="preferences-form">
+                        <div class="mb-4">
+                            <label class="form-label">Intereses</label>
+                            <div class="interests-grid">
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="gastronomia" id="pref_food">
+                                    <label class="form-check-label d-block" for="pref_food">
+                                        <i data-feather="coffee" class="interest-icon"></i>
+                                        <span>Gastronomía</span>
+                                    </label>
+                                </div>
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="cultura" id="pref_culture">
+                                    <label class="form-check-label d-block" for="pref_culture">
+                                        <i data-feather="book-open" class="interest-icon"></i>
+                                        <span>Arte y Cultura</span>
+                                    </label>
+                                </div>
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="aventura" id="pref_adventure">
+                                    <label class="form-check-label d-block" for="pref_adventure">
+                                        <i data-feather="map" class="interest-icon"></i>
+                                        <span>Aventura</span>
+                                    </label>
+                                </div>
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="naturaleza" id="pref_nature">
+                                    <label class="form-check-label d-block" for="pref_nature">
+                                        <i data-feather="leaf" class="interest-icon"></i>
+                                        <span>Naturaleza</span>
+                                    </label>
+                                </div>
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="compras" id="pref_shopping">
+                                    <label class="form-check-label d-block" for="pref_shopping">
+                                        <i data-feather="shopping-bag" class="interest-icon"></i>
+                                        <span>Compras</span>
+                                    </label>
+                                </div>
+                                <div class="interest-item">
+                                    <input class="form-check-input" type="checkbox" value="nightlife" id="pref_nightlife">
+                                    <label class="form-check-label d-block" for="pref_nightlife">
+                                        <i data-feather="music" class="interest-icon"></i>
+                                        <span>Vida Nocturna</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="pref_dietary" class="form-label">Preferencias Alimentarias</label>
+                            <select class="form-control" id="pref_dietary">
+                                <option value="">Sin preferencias específicas</option>
+                                <option value="vegetarian">Vegetariano</option>
+                                <option value="vegan">Vegano</option>
+                                <option value="gluten_free">Sin gluten</option>
+                                <option value="lactose_free">Sin lactosa</option>
+                                <option value="halal">Halal</option>
+                                <option value="kosher">Kosher</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="pref_transportation" class="form-label">Medio de Transporte Preferido</label>
+                            <select class="form-control" id="pref_transportation">
+                                <option value="taxi">Taxi</option>
+                                <option value="private_car">Automóvil privado</option>
+                                <option value="luxury_car">Vehículo de lujo</option>
+                                <option value="suv">SUV</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-luxury-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-luxury-primary" id="save-preferences">Guardar Preferencias</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script>
+        // Initialize chat
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            
+            const guest = {
+                id: {{ guest.id }},
+                name: "{{ guest.name }}",
+                room: "{{ guest.room_number }}"
+            };
+            
+            initChat(guest);
+            
+            // Initialize preferences form with saved preferences
+            // This would be populated from the guest's actual preferences in a full implementation
+            if (guest.preferences) {
+                try {
+                    const preferences = JSON.parse(guest.preferences);
+                    if (preferences.interests) {
+                        preferences.interests.forEach(interest => {
+                            const checkbox = document.getElementById(`pref_${interest}`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+                    
+                    if (preferences.dietary) {
+                        const dietarySelect = document.getElementById('pref_dietary');
+                        if (dietarySelect) dietarySelect.value = preferences.dietary;
+                    }
+                    
+                    if (preferences.transportation) {
+                        const transportSelect = document.getElementById('pref_transportation');
+                        if (transportSelect) transportSelect.value = preferences.transportation;
+                    }
+                } catch (e) {
+                    console.error('Error parsing preferences:', e);
+                }
+            }
+            
+            // Save preferences button functionality
+            document.getElementById('save-preferences').addEventListener('click', async () => {
+                const interests = [];
+                
+                document.querySelectorAll('#preferences-form input[type="checkbox"]:checked').forEach(checkbox => {
+                    interests.push(checkbox.value);
+                });
+                
+                const preferencesData = {
+                    interests,
+                    dietary: document.getElementById('pref_dietary').value,
+                    transportation: document.getElementById('pref_transportation').value
+                };
+                
+                try {
+                    // Send to API - this would be implemented in a full version
+                    console.log('Saving preferences:', preferencesData);
+                    // const response = await axios.post('/api/update-preferences', { guest_id: guest.id, preferences: preferencesData });
+                    
+                    // Close modal
+                    bootstrap.Modal.getInstance(document.getElementById('preferencesModal')).hide();
+                    
+                    // Add confirmation message to chat
+                    addMessageToChat('He actualizado sus preferencias. Utilizaré esta información para personalizar mis recomendaciones.', 'assistant');
+                    
+                } catch (error) {
+                    console.error('Error saving preferences:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

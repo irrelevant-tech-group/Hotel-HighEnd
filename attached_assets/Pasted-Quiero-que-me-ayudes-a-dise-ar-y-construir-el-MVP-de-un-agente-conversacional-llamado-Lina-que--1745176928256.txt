@@ -1,0 +1,51 @@
+Quiero que me ayudes a diseñar y construir el MVP de un agente conversacional llamado **Lina**, que funcionará como concierge digital para un hotel boutique de lujo en Medellín llamado **Hotel Aramé**.
+
+Este agente será usado por los huéspedes una vez hagan check-in, y los acompañará durante toda su estadía. Su tono debe ser cálido, profesional y cercano, hablando en español neutro, como alguien local que conoce Medellín. El MVP no requiere interfaz visual por ahora, y se asume que la interacción se hará por WhatsApp o una app web sencilla en el futuro.
+
+### Tu objetivo:
+
+Como desarrollador AI, quiero que me ayudes a construir este sistema paso a paso, pensando como ingeniero de producto. No actúes como Lina. Ayúdame a diseñarla técnicamente y funcionalmente. Quiero que propongas la mejor arquitectura posible, las bases de datos necesarias y una estrategia de desarrollo clara.
+
+---
+
+### Alcance funcional del MVP:
+
+1. **Activación por Check-in**  
+   Lina se activa cuando un huésped hace check-in (por ahora, esto se simula vía webhook o trigger manual). Debe enviar un mensaje de bienvenida personalizado.
+
+2. **Recomendaciones Locales Personalizadas**  
+   Lina puede recomendar lugares para comer, beber o visitar en Medellín, teniendo en cuenta:
+   - Hora del día
+   - Clima (vía API como OpenWeather)
+   - Posible perfil del huésped (si hay información disponible)
+   Además, debe poder calcular distancias desde el hotel a los lugares usando Google Maps API o similar.
+
+3. **Room Service**  
+   El huésped puede solicitar room service desde un menú estático. Los pedidos deben guardarse con:
+   - Nombre del huésped (o identificador)
+   - Habitación
+   - Ítems solicitados
+   - Fecha y hora del pedido
+
+4. **Agendamiento de Transporte**  
+   El huésped puede pedir transporte para una hora específica (ej. taxi al aeropuerto). La solicitud debe registrarse y quedar lista para ser gestionada manual o automáticamente más adelante.
+
+5. **Preguntas Frecuentes**  
+   El sistema debe poder responder automáticamente preguntas como:
+   - ¿Cuál es la clave del WiFi?
+   - ¿Dónde queda el spa?
+   - ¿Cuál es el horario del desayuno?
+
+---
+
+### Qué necesito de ti en esta etapa:
+
+1. Una propuesta de **arquitectura técnica ideal** para este MVP.
+2. El diseño de la **estructura de base de datos** (puedes usar la tecnología que consideres óptima).
+3. Un **mapa de flujos conversacionales** básicos para cada funcionalidad del MVP.
+4. Una **estrategia de desarrollo modular**, ideal para escalar después del MVP (ej: añadir reservas de restaurante, integración con PMS, etc.).
+
+Puedes usar cualquier stack que consideres adecuado, incluyendo backend ligero, servicios serverless, o frameworks que permitan despliegue rápido.
+
+No empieces a escribir código aún. Primero, propón todo lo anterior de forma clara, organizada y con foco en que sea escalable.
+

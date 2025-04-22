@@ -1,0 +1,282 @@
+{
+  "desayuno": [
+    {
+      "name": "Desayuno Continental",
+      "description": "Selección de panes artesanales, croissants, mantequilla, mermeladas caseras, frutas de temporada y yogurt",
+      "price": 25000,
+      "available": ["6:30", "11:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Desayuno Americano",
+      "description": "Huevos al gusto, bacon crujiente, salchicha, pan tostado, hash browns y frutas frescas",
+      "price": 32000,
+      "available": ["6:30", "11:00"],
+      "tags": []
+    },
+    {
+      "name": "Huevos Benedict",
+      "description": "Huevos pochados sobre muffin inglés con jamón serrano, aguacate y salsa holandesa",
+      "price": 28000,
+      "available": ["6:30", "11:00"],
+      "tags": []
+    },
+    {
+      "name": "Omelette del Chef",
+      "description": "Relleno de queso mozzarella, champiñones, espinacas y tomate. Servido con patatas y tostadas",
+      "price": 26000,
+      "available": ["6:30", "11:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Pancakes con Frutas",
+      "description": "Torre de pancakes esponjosos con frutas del bosque, miel de maple y crema batida",
+      "price": 22000,
+      "available": ["6:30", "11:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Tostadas de Aguacate",
+      "description": "Pan de masa madre tostado con aguacate, huevo pochado, semillas de sésamo y microgreens",
+      "price": 24000,
+      "available": ["6:30", "11:00"],
+      "tags": ["vegetariano"]
+    }
+  ],
+  "entradas": [
+    {
+      "name": "Ceviche de Camarones",
+      "description": "Camarones frescos marinados en limón, cilantro, cebolla roja, ají y maíz cancha",
+      "price": 35000,
+      "available": ["12:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Carpaccio de Res",
+      "description": "Finas láminas de res con rúcula, parmesano, alcaparras y aceite de trufa",
+      "price": 38000,
+      "available": ["12:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Burrata con Tomates",
+      "description": "Cremosa burrata con tomates heirloom, aceite de oliva, albahaca y reducción balsámica",
+      "price": 34000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Empanadas Colombianas",
+      "description": "Tradicionales empanadas de carne, servidas con ají casero (3 unidades)",
+      "price": 25000,
+      "available": ["12:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Tabla de Quesos y Charcutería",
+      "description": "Selección de quesos locales e importados con jamones curados, frutos secos y pan artesanal",
+      "price": 45000,
+      "available": ["12:00", "23:00"],
+      "tags": []
+    }
+  ],
+  "principales": [
+    {
+      "name": "Filete de Res Angus",
+      "description": "Filete de 250g de res Angus cocido a término con puré de papas trufado y vegetales de temporada",
+      "price": 68000,
+      "available": ["18:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Salmón a la Parrilla",
+      "description": "Filete de salmón con risotto de limón, espárragos grillados y salsa de eneldo",
+      "price": 58000,
+      "available": ["18:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Pollo al Romero",
+      "description": "Pechuga de pollo orgánico marinada en romero y limón con puré de camote y vegetales asados",
+      "price": 48000,
+      "available": ["18:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Risotto de Hongos Silvestres",
+      "description": "Cremoso risotto con variedad de hongos silvestres, trufa negra, parmesano y aceite de trufa",
+      "price": 45000,
+      "available": ["18:00", "23:00"],
+      "tags": ["vegetariano", "sin_gluten"]
+    },
+    {
+      "name": "Pescado del Día",
+      "description": "Pesca local del día preparada según recomendación del chef con guarniciones de temporada",
+      "price": 56000,
+      "available": ["18:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Rack de Cordero",
+      "description": "Costillas de cordero con costra de hierbas, puré de papas a la francesa y salsa de menta",
+      "price": 72000,
+      "available": ["18:00", "23:00"],
+      "tags": []
+    }
+  ],
+  "sandwiches": [
+    {
+      "name": "Club Sandwich Aramé",
+      "description": "Triple sándwich con pollo, bacon, huevo, queso, lechuga, tomate y mayonesa de la casa. Acompañado de papas fritas",
+      "price": 38000,
+      "available": ["11:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Hamburguesa Gourmet",
+      "description": "200g de carne Angus, queso cheddar madurado, bacon caramelizado, cebolla confitada, lechuga, tomate y salsa especial. Con papas fritas",
+      "price": 42000,
+      "available": ["11:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Wrap Mediterráneo",
+      "description": "Tortilla de trigo con hummus, vegetales asados, espinacas frescas, queso feta y vinagreta balsámica",
+      "price": 32000,
+      "available": ["11:00", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Sándwich de Salmón Ahumado",
+      "description": "Pan de centeno con salmón ahumado, aguacate, queso crema, alcaparras y rúcula",
+      "price": 36000,
+      "available": ["11:00", "23:00"],
+      "tags": []
+    }
+  ],
+  "postres": [
+    {
+      "name": "Cheesecake de Maracuyá",
+      "description": "Cremoso cheesecake con coulis de maracuyá y frutas frescas",
+      "price": 22000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Tiramisú",
+      "description": "Clásico tiramisú italiano con café colombiano, mascarpone y cacao en polvo",
+      "price": 24000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Crème Brûlée",
+      "description": "Suave natilla de vainilla con costra caramelizada y frutas del bosque",
+      "price": 20000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano", "sin_gluten"]
+    },
+    {
+      "name": "Fondant de Chocolate",
+      "description": "Bizcocho de chocolate con centro líquido, servido con helado de vainilla",
+      "price": 25000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Fruta Fresca de Temporada",
+      "description": "Selección de frutas tropicales frescas con miel y yogurt natural",
+      "price": 18000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    }
+  ],
+  "bebidas": [
+    {
+      "name": "Café Americano",
+      "description": "Café de origen colombiano preparado con agua caliente",
+      "price": 8000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    },
+    {
+      "name": "Espresso",
+      "description": "Shot de café concentrado",
+      "price": 6000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    },
+    {
+      "name": "Cappuccino",
+      "description": "Espresso con leche vaporizada y espuma",
+      "price": 10000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano"]
+    },
+    {
+      "name": "Té de Hierbas",
+      "description": "Infusión de hierbas orgánicas a elegir",
+      "price": 7000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    },
+    {
+      "name": "Limonada Natural",
+      "description": "Limones frescos con agua y un toque de azúcar",
+      "price": 9000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    },
+    {
+      "name": "Limonada de Coco",
+      "description": "Refrescante limonada con crema de coco",
+      "price": 12000,
+      "available": ["11:00", "23:00"],
+      "tags": ["vegetariano", "sin_gluten"]
+    },
+    {
+      "name": "Jugo Natural",
+      "description": "Variedad de jugos de frutas frescas: naranja, piña, fresa, mango o maracuyá",
+      "price": 10000,
+      "available": ["6:30", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    }
+  ],
+  "licores": [
+    {
+      "name": "Copa de Vino",
+      "description": "Selección de vinos tintos, blancos o rosados por copa",
+      "price": 22000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    },
+    {
+      "name": "Cerveza Local",
+      "description": "Variedad de cervezas artesanales colombianas",
+      "price": 15000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano", "vegano"]
+    },
+    {
+      "name": "Cerveza Importada",
+      "description": "Selección de cervezas premium internacionales",
+      "price": 18000,
+      "available": ["12:00", "23:00"],
+      "tags": ["vegetariano", "vegano"]
+    },
+    {
+      "name": "Cóctel de la Casa",
+      "description": "Preparaciones especiales de nuestro bartender, consulte opciones disponibles",
+      "price": 25000,
+      "available": ["16:00", "23:00"],
+      "tags": []
+    },
+    {
+      "name": "Destilados Premium",
+      "description": "Whisky, Ron, Vodka o Gin de marcas premium (2oz)",
+      "price": 28000,
+      "available": ["16:00", "23:00"],
+      "tags": ["vegetariano", "vegano", "sin_gluten"]
+    }
+  ]
+}
