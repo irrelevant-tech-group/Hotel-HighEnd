@@ -1,5 +1,4 @@
 from flask import render_template, request, jsonify, session, redirect, url_for
-from app import app, db
 from models import Guest, Conversation, RoomServiceOrder, TransportationRequest
 from services.conversation_service import process_message
 from services.recommendation_service import get_personalized_recommendations
@@ -12,6 +11,9 @@ from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Import app and db after all other imports
+from app import app, db
 
 @app.route('/')
 def index():

@@ -26,5 +26,6 @@ db.init_app(app)
 with app.app_context():
     # Make sure to import the models here or their tables won't be created
     import models  # noqa: F401
+    import routes  # Import routes after app and db are initialized
 
     db.create_all()
