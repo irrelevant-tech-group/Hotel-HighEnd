@@ -8,4 +8,5 @@ env/
 venv/
 ENV/
 
+services/vapi_service.py
 
