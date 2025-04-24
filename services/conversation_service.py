@@ -33,6 +33,8 @@ def process_message(message, guest, conversation_history, context):
         
         # Extract any entities from the message for context enhancement
         entities = extract_entities(message)
+        # Add the raw message text to entities for follow-up handling
+        entities['text'] = message
         logger.debug(f"Extracted entities: {entities}")
         
         # Add extracted entities to context
@@ -110,6 +112,11 @@ def process_message(message, guest, conversation_history, context):
                 updated_context['recommendation_interests'] = []
             if entities['category'] not in updated_context['recommendation_interests']:
                 updated_context['recommendation_interests'].append(entities['category'])
+        
+        elif intent == "transportation":
+            # Handle transportation request
+            response = handle_transportation(guest, entities, updated_context)
+            return response, updated_context
         
         # Keep conversation history within limits
         while len(conversation_history) > MAX_CONVERSATION_HISTORY:
@@ -280,14 +287,33 @@ def handle_room_service(guest, entities, context):
 
 def handle_transportation(guest, entities, context):
     """Handle transportation request intent"""
+    # If this is a follow-up message in a transportation conversation
+    if context.get('current_intent') == 'transportation':
+        # If we're waiting for destination and we have text in entities
+        if context.get('awaiting') == 'destination' and entities.get('text'):
+            destination = entities.get('text')
+            entities['destination'] = destination
+            context['destination'] = destination
+            context['awaiting'] = 'pickup_time'
+        # If we're waiting for pickup time and we have text in entities
+        elif context.get('awaiting') == 'pickup_time' and entities.get('text'):
+            pickup_time = entities.get('text')
+            entities['pickup_time'] = pickup_time
+            context['pickup_time'] = pickup_time
+            context['awaiting'] = None
+    
     # Check if we have all the necessary information
     destination = entities.get('destination', context.get('destination'))
     pickup_time = entities.get('pickup_time', context.get('pickup_time'))
     
     if not destination:
+        context['awaiting'] = 'destination'
+        context['current_intent'] = 'transportation'
         return "¿A dónde te gustaría ir? Necesito saber el destino para programar tu transporte."
     
     if not pickup_time:
+        context['awaiting'] = 'pickup_time'
+        context['current_intent'] = 'transportation'
         return f"¿A qué hora necesitas el transporte para ir a {destination}? Por ejemplo, '9:30 am' o 'en 2 horas'."
     
     # Optional information
@@ -305,6 +331,12 @@ def handle_transportation(guest, entities, context):
             vehicle_type,
             special_notes
         )
+        
+        # Clear the transportation context since request is complete
+        context['awaiting'] = None
+        context['current_intent'] = None
+        context['destination'] = None
+        context['pickup_time'] = None
         
         return (f"He programado tu {vehicle_type} para {pickup_time} con destino a {destination}. "
                 f"Tu solicitud ha sido registrada con el número {request_id}. "

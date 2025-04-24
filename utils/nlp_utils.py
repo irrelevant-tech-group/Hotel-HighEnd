@@ -9,18 +9,26 @@ logger = logging.getLogger(__name__)
 # Since we don't have direct access to spaCy in this implementation,
 # we'll create simplified NLP functions for the MVP
 
-def classify_intent(message):
+def classify_intent(message, context=None):
     """
-    Classify the intent of a user message
+    Classify the intent of a user message, taking into account conversation context
     
     Args:
         message (str): The user message
+        context (dict, optional): The current conversation context
         
     Returns:
         tuple: (intent, confidence)
     """
     # Normalize message
     message = message.lower().strip()
+    
+    # If we have context and are in the middle of a transportation request,
+    # bias towards keeping the transportation intent
+    if context and context.get('current_intent') == 'transportation':
+        # If we're missing destination or pickup_time, this is likely still part of the transportation flow
+        if not context.get('destination') or not context.get('pickup_time'):
+            return 'transportation', 0.8
     
     # Simple rule-based intent classification
     intents = {
@@ -55,7 +63,9 @@ def classify_intent(message):
         'transportation': [
             r'\btaxi\b', r'\btransporte\b', r'\buber\b', r'\bcarro\b', r'\bveh[íi]culo\b',
             r'\bir\b.*\baeropuerto\b', r'\bir\b.*\bciudad\b', r'\bir\b.*\a\b',
-            r'\bviaje\b', r'\btraslado\b', r'\bcomo llegar\b', r'\bmovilizarme\b'
+            r'\bviaje\b', r'\btraslado\b', r'\bcomo llegar\b', r'\bmovilizarme\b',
+            r'\ba las\b', r'\bpara las\b', r'\ben\b.*\bhoras?\b', r'\bma[ñn]ana\b',
+            r'\b al \b', r'\b hacia \b'  # Time-related patterns for transportation
         ],
         'weather': [
             r'\bclima\b', r'\btiempo\b.*\bhoy\b', r'\bllover\b', r'\blluvia\b',
@@ -79,10 +89,18 @@ def classify_intent(message):
                 score += 1
         
         if score > 0:
+            # Boost confidence for the current ongoing intent from context
+            if context and context.get('current_intent') == intent:
+                score += 1
+            
             confidence = min(0.5 + (score * 0.1), 0.95)  # Scale confidence
             scores[intent] = confidence
     
-    # If no matches, default to FAQ with low confidence
+    # If no matches but we have context, maintain the current intent with lower confidence
+    if not scores and context and context.get('current_intent'):
+        return context['current_intent'], 0.4
+    
+    # If still no matches, default to FAQ with low confidence
     if not scores:
         return 'faq', 0.3
     
@@ -171,12 +189,12 @@ def extract_entities(message):
     if 'taxi' in message or 'transporte' in message or 'uber' in message or 'carro' in message:
         # Extract destination
         dest_patterns = [
-            r'(?:a|al|hacia|para)\s+(?:el|la|los|las)?\s+([a-zá-úñ\s]+?)(?:\s+a las|\s+para|\s+por|\s+mañana|\s+hoy|\.|$)',
-            r'(?:ir)\s+(?:a|al)\s+([a-zá-úñ\s]+?)(?:\s+a las|\s+para|\s+por|\s+mañana|\s+hoy|\.|$)'
+            r'(?:a|al|hacia|para)\s+(?:el|la|los|las)?\s+([a-zá-úñ\s]+?)(?:\s+(?:a las|para|por|mañana|hoy)|$)',
+            r'(?:ir)\s+(?:a|al)\s+([a-zá-úñ\s]+?)(?:\s+(?:a las|para|por|mañana|hoy)|$)'
         ]
         
         for pattern in dest_patterns:
-            dest_match = re.search(pattern, message)
+            dest_match = re.search(pattern, message.lower())
             if dest_match:
                 # Clean up destination
                 destination = dest_match.group(1).strip()
