@@ -66,7 +66,10 @@ def get_nearby_places(place_type, radius=1500, language="es"):
             # Add photos if available
             if 'photos' in place:
                 photo_reference = place['photos'][0]['photo_reference']
-                place_details['photo_url'] = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={GOOGLE_MAPS_API_KEY}"
+                place_details['photo_url'] = (
+                    f"https://maps.googleapis.com/maps/api/place/photo?"
+                    f"maxwidth=400&photoreference={photo_reference}&key={GOOGLE_MAPS_API_KEY}"
+                )
             
             # Calculate distance from hotel
             place_details['distance'] = calculate_distance(
@@ -263,7 +266,8 @@ def format_walking_directions(origin, destination):
             # Clean HTML tags from instructions
             instructions = step['html_instructions']
             instructions = instructions.replace('<b>', '').replace('</b>', '')
-            instructions = instructions.replace('<div style="font-size:0.9em">', '. ').replace('</div>', '')
+            instructions = instructions.replace(
+                '<div style="font-size:0.9em">', '. ').replace('</div>', '')
             
             directions["steps"].append({
                 "number": i,
@@ -280,3 +284,65 @@ def format_walking_directions(origin, destination):
             "status": "ERROR",
             "message": "Error al obtener las indicaciones"
         }
+
+# Añadido: función para obtener fotos de un lugar
+def get_place_photos(place_id, max_height=500, max_width=800, max_photos=5):
+    """
+    Get photos for a specific place from Google Places API
+    
+    Args:
+        place_id (str): Google Place ID
+        max_height (int): Maximum height of photos
+        max_width (int): Maximum width of photos
+        max_photos (int): Maximum number of photos to return
+        
+    Returns:
+        list: List of photo URLs
+    """
+    try:
+        if not GOOGLE_MAPS_API_KEY:
+            logger.warning("Google Maps API key not available")
+            return []
+            
+        url = "https://maps.googleapis.com/maps/api/place/details/json"
+        
+        # Prepare params
+        params = {
+            'place_id': place_id,
+            'fields': 'photos',
+            'key': GOOGLE_MAPS_API_KEY
+        }
+        
+        # Make request
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        
+        if (data['status'] != 'OK' or
+            'result' not in data or
+            'photos' not in data['result']):
+            logger.warning(f"No photos found for place_id: {place_id}")
+            return []
+            
+        # Process photos
+        photos = []
+        for photo in data['result']['photos'][:max_photos]:
+            if 'photo_reference' in photo:
+                photo_url = (
+                    f"https://maps.googleapis.com/maps/api/place/photo?"
+                    f"maxwidth={max_width}&maxheight={max_height}&"
+                    f"photoreference={photo['photo_reference']}&key={GOOGLE_MAPS_API_KEY}"
+                )
+                photos.append({
+                    'url': photo_url,
+                    'width': photo.get('width', max_width),
+                    'height': photo.get('height', max_height),
+                    'attribution': photo.get('html_attributions', []),
+                    'is_featured': len(photos) == 0  # First photo is featured
+                })
+        
+        return photos
+        
+    except Exception as e:
+        logger.error(f"Error getting place photos: {str(e)}")
+        return []

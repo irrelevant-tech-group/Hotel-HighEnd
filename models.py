@@ -74,6 +74,11 @@ class Recommendation(db.Model):
     name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)  # restaurant, bar, activity, attraction
     description = db.Column(db.Text, nullable=False)
+    images = db.Column(db.Text, nullable=True)  # Para guardar URLs de imágenes en JSON
+    place_id = db.Column(db.String(100), nullable=True)  # Para Google Maps
+    reviews = db.Column(db.Text, nullable=True)  # Reseñas en formato JSON
+    google_rating = db.Column(db.Float, nullable=True)  # Rating de Google
+    concierge_tips = db.Column(db.Text, nullable=True)
     address = db.Column(db.String(255), nullable=False)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)

@@ -166,3 +166,6 @@ def get_directions(origin_lat, origin_lon, dest_lat, dest_lon, mode='walking'):
             'status': 'ERROR',
             'message': 'Failed to retrieve directions information'
         }
+    
+
+    
