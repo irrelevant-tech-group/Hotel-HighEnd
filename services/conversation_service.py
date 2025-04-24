@@ -37,20 +37,44 @@ def process_message(message, guest, conversation_history, context):
         entities['text'] = message
         logger.debug(f"Extracted entities: {entities}")
         
-        # Add extracted entities to context
-        for key, value in entities.items():
-            if value:  # Only add non-empty values
-                updated_context[key] = value
-                # Keep track of entities we've collected
-                if 'known_entities' not in updated_context:
-                    updated_context['known_entities'] = []
-                if key not in updated_context['known_entities']:
-                    updated_context['known_entities'].append(key)
-        
         # Detect intent for specialized handling and analytics
         intent, confidence = classify_intent(message)
         logger.debug(f"Detected intent: {intent} with confidence: {confidence}")
+        
+        # Store previous intent before updating
+        if 'current_intent' in updated_context:
+            updated_context['previous_intent'] = updated_context['current_intent']
         updated_context['current_intent'] = intent
+
+        # Check if this is a follow-up question about a specific place
+        if 'text' in entities:
+            # Look for place names in the question
+            place_matches = extract_place_references(entities['text'])
+            if place_matches:
+                # Store the most recently discussed place
+                updated_context['last_mentioned_destination'] = place_matches[0]
+                # If this is a question about a place, treat it as a recommendation follow-up
+                if intent == "question":
+                    updated_context['previous_intent'] = "recommendation"
+        
+        # Special handling for transportation requests following any restaurant/place discussion
+        if intent == "transportation":
+            # First check for explicit destination in request
+            if 'destination' not in entities:
+                # Then check context in order of precedence:
+                # 1. Last explicitly mentioned destination
+                if 'last_mentioned_destination' in updated_context:
+                    entities['destination'] = updated_context['last_mentioned_destination']
+                # 2. Current recommendation being discussed
+                elif 'current_recommendation' in updated_context:
+                    entities['destination'] = updated_context['current_recommendation'].get('name')
+                # 3. Most recent recommendation from history
+                elif 'all_recommendations' in updated_context and updated_context['all_recommendations']:
+                    entities['destination'] = updated_context['all_recommendations'][0].get('name')
+            
+            if 'destination' in entities:
+                response = handle_transportation(guest, entities, updated_context)
+                return response, updated_context
         
         # Track intents for personalization
         if 'intent_history' not in updated_context:
@@ -97,7 +121,6 @@ def process_message(message, guest, conversation_history, context):
         updated_context['last_response'] = datetime.utcnow().isoformat()
         
         # Special handling for certain detected intents
-        # This helps maintain structured data for future service requests
         if intent == "room_service" and 'order_items' in entities and entities['order_items']:
             # Log food preference for future personalization
             if 'food_preferences' not in updated_context:
@@ -112,11 +135,12 @@ def process_message(message, guest, conversation_history, context):
                 updated_context['recommendation_interests'] = []
             if entities['category'] not in updated_context['recommendation_interests']:
                 updated_context['recommendation_interests'].append(entities['category'])
-        
-        elif intent == "transportation":
-            # Handle transportation request
-            response = handle_transportation(guest, entities, updated_context)
-            return response, updated_context
+            
+            # Get the recommendations and store the current one in context
+            recommendations = get_personalized_recommendations(guest.id, entities['category'])
+            if recommendations:
+                updated_context['current_recommendation'] = recommendations[0]
+                updated_context['all_recommendations'] = recommendations
         
         # Keep conversation history within limits
         while len(conversation_history) > MAX_CONVERSATION_HISTORY:
@@ -287,65 +311,50 @@ def handle_room_service(guest, entities, context):
 
 def handle_transportation(guest, entities, context):
     """Handle transportation request intent"""
-    # If this is a follow-up message in a transportation conversation
-    if context.get('current_intent') == 'transportation':
-        # If we're waiting for destination and we have text in entities
-        if context.get('awaiting') == 'destination' and entities.get('text'):
-            destination = entities.get('text')
-            entities['destination'] = destination
-            context['destination'] = destination
-            context['awaiting'] = 'pickup_time'
-        # If we're waiting for pickup time and we have text in entities
-        elif context.get('awaiting') == 'pickup_time' and entities.get('text'):
-            pickup_time = entities.get('text')
-            entities['pickup_time'] = pickup_time
-            context['pickup_time'] = pickup_time
-            context['awaiting'] = None
-    
-    # Check if we have all the necessary information
-    destination = entities.get('destination', context.get('destination'))
-    pickup_time = entities.get('pickup_time', context.get('pickup_time'))
-    
-    if not destination:
-        context['awaiting'] = 'destination'
-        context['current_intent'] = 'transportation'
-        return "¿A dónde te gustaría ir? Necesito saber el destino para programar tu transporte."
-    
-    if not pickup_time:
-        context['awaiting'] = 'pickup_time'
-        context['current_intent'] = 'transportation'
-        return f"¿A qué hora necesitas el transporte para ir a {destination}? Por ejemplo, '9:30 am' o 'en 2 horas'."
-    
-    # Optional information
-    vehicle_type = entities.get('vehicle_type', context.get('vehicle_type', 'taxi'))
-    num_passengers = entities.get('num_passengers', context.get('num_passengers', 1))
-    special_notes = entities.get('special_notes', context.get('special_notes', ''))
-    
     try:
-        # Schedule transportation
-        request_id = schedule_transportation(
-            guest.id,
-            pickup_time,
-            destination,
-            num_passengers,
-            vehicle_type,
-            special_notes
+        # If no destination is provided in entities, check the context for recent recommendations or destinations
+        if 'destination' not in entities:
+            return "¿A dónde te gustaría ir? Necesito saber el destino para programar tu transporte."
+            
+        destination = entities['destination']
+        # Store the destination in context for future reference
+        context['last_mentioned_destination'] = destination
+
+        # Get or set default values for other transportation details
+        # If time is specified in the request (e.g., "en 10 minutos"), use that
+        if 'time' in entities:
+            pickup_time = entities['time']
+        else:
+            pickup_time = datetime.now().isoformat()
+            
+        # Use guest's preferred transport type if available
+        vehicle_type = entities.get('vehicle_type', 
+                                  context.get('preferred_transport', 
+                                            json.loads(guest.preferences).get('transport', 'taxi') if guest.preferences else 'taxi'))
+        
+        num_passengers = entities.get('num_passengers', 1)
+
+        # Schedule the transportation
+        booking = schedule_transportation(
+            guest_id=guest.id,
+            destination=destination,
+            pickup_time=pickup_time,
+            vehicle_type=vehicle_type,
+            num_passengers=num_passengers
         )
-        
-        # Clear the transportation context since request is complete
-        context['awaiting'] = None
-        context['current_intent'] = None
-        context['destination'] = None
-        context['pickup_time'] = None
-        
-        return (f"He programado tu {vehicle_type} para {pickup_time} con destino a {destination}. "
-                f"Tu solicitud ha sido registrada con el número {request_id}. "
-                f"Te avisaremos en tu habitación cuando el vehículo llegue. "
-                f"¿Necesitas algo más?")
-                
+
+        if booking:
+            response = f"He programado tu transporte a {destination}. "
+            if 'confirmation_number' in booking:
+                response += f"Tu número de confirmación es {booking['confirmation_number']}. "
+            response += "Te avisaré cuando el vehículo esté llegando."
+            return response
+        else:
+            return "Lo siento, hubo un problema al programar el transporte. ¿Podrías intentarlo de nuevo?"
+
     except Exception as e:
-        logger.error(f"Error scheduling transportation: {str(e)}")
-        return "Lo siento, tuve un problema al programar tu transporte. ¿Puedes intentarlo de nuevo?"
+        logger.error(f"Error handling transportation request: {str(e)}")
+        return "Lo siento, tuve un problema al procesar tu solicitud de transporte. ¿Puedes intentarlo de nuevo?"
 
 
 def handle_faq(message, entities):
@@ -422,3 +431,20 @@ def handle_thanks():
         "Es mi placer. Si necesitas cualquier otra cosa, solo pregunta."
     ]
     return responses[datetime.now().second % len(responses)]
+
+
+def extract_place_references(text):
+    """Extract potential place names from text using NLP"""
+    # This is a simplified version - in practice, you'd want to use a proper NLP library
+    # and maintain a list of known places
+    known_places = [
+        "Mondongos", "Carmen", "El Cielo", "OCI.Mde",
+        # Add other known restaurant/place names
+    ]
+    
+    found_places = []
+    for place in known_places:
+        if place.lower() in text.lower():
+            found_places.append(place)
+    
+    return found_places
