@@ -91,46 +91,71 @@ def chat(guest_id):
 @app.route('/api/check-in', methods=['POST'])
 def check_in():
     """API endpoint to simulate guest check-in"""
+    logger.info("Received check-in request")
     data = request.json
+    logger.debug(f"Check-in data received: {json.dumps(data, indent=2)}")
     
     # Basic validation
     if not data.get('name') or not data.get('room_number'):
-        return jsonify({'success': False, 'error': 'Nombre y número de habitación son requeridos'}), 400
+        error_msg = "Missing required fields: name and room_number are required"
+        logger.error(error_msg)
+        return jsonify({'success': False, 'error': error_msg}), 400
     
-    # Check if guest already exists in this room
-    existing_guest = Guest.query.filter_by(
-        room_number=data['room_number'], 
-        is_active=True
-    ).first()
-    
-    if existing_guest:
-        # Update existing guest
-        existing_guest.name = data['name']
-        existing_guest.phone_number = data.get('phone_number')
-        existing_guest.email = data.get('email')
-        existing_guest.preferences = json.dumps(data.get('preferences', {}))
-        db.session.commit()
-        guest_id = existing_guest.id
-    else:
-        # Create new guest
-        new_guest = Guest(
-            name=data['name'],
-            room_number=data['room_number'],
-            phone_number=data.get('phone_number'),
-            email=data.get('email'),
-            preferences=json.dumps(data.get('preferences', {})),
-            check_in_date=datetime.utcnow()
-        )
-        db.session.add(new_guest)
-        db.session.commit()
-        guest_id = new_guest.id
-    
-    return jsonify({
-        'success': True, 
-        'guest_id': guest_id, 
-        'message': 'Check-in completado correctamente',
-        'onboarding_url': url_for('onboarding', guest_id=guest_id)
-    })
+    try:
+        # Check if guest already exists in this room
+        existing_guest = Guest.query.filter_by(
+            room_number=data['room_number'], 
+            is_active=True
+        ).first()
+        
+        if existing_guest:
+            logger.info(f"Updating existing guest in room {data['room_number']}")
+            # Update existing guest
+            existing_guest.name = data['name']
+            existing_guest.phone_number = data.get('phone_number')
+            existing_guest.email = data.get('email')
+            existing_guest.preferences = json.dumps(data.get('preferences', {}))
+            db.session.commit()
+            guest_id = existing_guest.id
+            logger.info(f"Successfully updated guest with ID: {guest_id}")
+        else:
+            logger.info(f"Creating new guest for room {data['room_number']}")
+            # Create new guest
+            new_guest = Guest(
+                name=data['name'],
+                room_number=data['room_number'],
+                phone_number=data.get('phone_number'),
+                email=data.get('email'),
+                preferences=json.dumps(data.get('preferences', {})),
+                check_in_date=datetime.utcnow()
+            )
+            db.session.add(new_guest)
+            try:
+                db.session.commit()
+                guest_id = new_guest.id
+                logger.info(f"Successfully created new guest with ID: {guest_id}")
+            except Exception as db_error:
+                logger.error(f"Database error during guest creation: {str(db_error)}")
+                db.session.rollback()
+                raise
+        
+        response_data = {
+            'success': True, 
+            'guest_id': guest_id, 
+            'message': 'Check-in completado correctamente',
+            'onboarding_url': url_for('onboarding', guest_id=guest_id)
+        }
+        logger.info(f"Check-in successful. Response: {json.dumps(response_data, indent=2)}")
+        return jsonify(response_data)
+        
+    except Exception as e:
+        error_msg = f"Error during check-in process: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        return jsonify({
+            'success': False, 
+            'error': error_msg,
+            'details': str(e)
+        }), 500
 
 @app.route('/api/send-message', methods=['POST'])
 def send_message():
