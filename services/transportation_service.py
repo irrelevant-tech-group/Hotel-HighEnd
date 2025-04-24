@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import dateutil.parser
 from app import db
 from models import Guest, TransportationRequest
+from services.vapi_service import make_transportation_arrival_call, make_transportation_confirmation_call
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,17 @@ def schedule_transportation(guest_id, pickup_time, destination, num_passengers=1
     Returns:
         int: Transportation request ID
     """
+    logger.debug("\n" + "="*50)
+    logger.debug(f"ENTERING schedule_transportation")
+    logger.debug(f"Parameters received:")
+    logger.debug(f"guest_id: {guest_id}")
+    logger.debug(f"pickup_time: {pickup_time}")
+    logger.debug(f"destination: {destination}")
+    logger.debug(f"num_passengers: {num_passengers}")
+    logger.debug(f"vehicle_type: {vehicle_type}")
+    logger.debug(f"special_notes: {special_notes}")
+    logger.debug("="*50 + "\n")
+    
     try:
         # Get the guest
         guest = Guest.query.get(guest_id)
@@ -39,9 +51,23 @@ def schedule_transportation(guest_id, pickup_time, destination, num_passengers=1
             vehicle_type=vehicle_type,
             special_notes=special_notes
         )
-        
+        logger.debug(f"\n\n---------------------------------\n\n")
+        logger.debug(f"new_request: {new_request}")
+        logger.debug(f"\n\n---------------------------------\n\n")
         db.session.add(new_request)
         db.session.commit()
+        
+        # Make confirmation call after successful scheduling
+        call_result = make_transportation_confirmation_call(new_request.id)
+        logger.debug(f"\n\n---------------------------------\n\n")
+        logger.debug(f"call_result: {call_result}")
+        logger.debug(f"\n\n---------------------------------\n\n")
+        if not call_result.get('success'):
+            logger.debug(f"\n\n---------------------------------\n\n")
+            logger.error(f"\n\nFailed to make confirmation call for request {new_request.id}: {call_result.get('error')}\n\n")
+            logger.debug(f"\n\n---------------------------------\n\n")
+            # Don't fail the scheduling if the call fails
+            # Just log the error and continue
         
         return new_request.id
         
@@ -171,12 +197,24 @@ def update_transportation_status(request_id, new_status):
         if not request:
             raise ValueError(f"Transportation request with ID {request_id} not found")
         
-        valid_statuses = ['pending', 'confirmed', 'completed', 'cancelled']
+        valid_statuses = ['pending', 'confirmed', 'arrived', 'completed', 'cancelled']
         if new_status not in valid_statuses:
             raise ValueError(f"Invalid status: {new_status}. Must be one of {valid_statuses}")
         
+        # Store old status for comparison
+        old_status = request.status
+        
+        # Update the status
         request.status = new_status
         db.session.commit()
+        
+        # If status changed to 'arrived', make the arrival call
+        if new_status == 'arrived' and old_status != 'arrived':
+            call_result = make_transportation_arrival_call(request_id)
+            if not call_result.get('success'):
+                logger.error(f"Failed to make arrival call for request {request_id}: {call_result.get('error')}")
+                # Don't fail the status update if the call fails
+                # Just log the error and continue
         
         return True
         
