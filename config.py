@@ -1,8 +1,16 @@
 import os
 import logging
 
-# Configuración de logging
-logging.basicConfig(level=logging.DEBUG)
+# Prevent duplicate logging
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+
+# Configure logging with a single handler
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s | %(levelname)s:%(name)s:%(message)s',
+    handlers=[logging.StreamHandler()]
+)
 
 # Configuración del hotel
 HOTEL_NAME = "Hotel Aramé"

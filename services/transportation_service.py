@@ -23,7 +23,7 @@ def schedule_transportation(guest_id, pickup_time, destination, num_passengers=1
         int: Transportation request ID
     """
     logger.debug("\n" + "="*50)
-    logger.debug(f"ENTERING schedule_transportation")
+    logger.debug("ENTERING schedule_transportation")
     logger.debug(f"Parameters received:")
     logger.debug(f"guest_id: {guest_id}")
     logger.debug(f"pickup_time: {pickup_time}")
@@ -56,8 +56,10 @@ def schedule_transportation(guest_id, pickup_time, destination, num_passengers=1
         logger.debug(f"\n\n---------------------------------\n\n")
         db.session.add(new_request)
         db.session.commit()
+        logger.debug(f"Saved request to database with ID: {new_request.id}")
         
         # Make confirmation call after successful scheduling
+        logger.debug("Attempting to make confirmation call")
         call_result = make_transportation_confirmation_call(new_request.id)
         logger.debug(f"\n\n---------------------------------\n\n")
         logger.debug(f"call_result: {call_result}")
@@ -73,7 +75,7 @@ def schedule_transportation(guest_id, pickup_time, destination, num_passengers=1
         
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Error scheduling transportation: {str(e)}")
+        logger.error(f"Error scheduling transportation: {str(e)}", exc_info=True)
         raise
 
 
