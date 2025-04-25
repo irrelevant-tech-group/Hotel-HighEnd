@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 VAPI_TOKEN = os.environ.get("VAPI_TOKEN")
 VAPI_BASE_URL = "https://api.vapi.ai/call/phone"
 PHONE_NUMBER_ID = os.environ.get("VAPI_PHONE_NUMBER_ID") 
-USER_PHONE_NUMBER = os.environ.get("USER_PHONE_NUMBER") 
+USER_PHONE_NUMBER = str(os.environ.get("USER_PHONE_NUMBER")) 
 
 
 def make_transportation_confirmation_call(request_id):
