@@ -68,15 +68,18 @@ with app.app_context():
         db.create_all()
         app.logger.info("Database tables created successfully")
     except Exception as e:
-        app.logger.error(f"Error creating database tables: {str(e)}")
-        # If there's an error, try to drop all tables and recreate them
-        try:
-            db.drop_all()
-            db.create_all()
-            app.logger.info("Database tables recreated successfully")
-        except Exception as e:
-            app.logger.error(f"Fatal error initializing database: {str(e)}")
-            raise
+        if "already exists" in str(e):
+            app.logger.warning("Some tables already exist, skipping creation.")
+        else:
+            app.logger.error(f"Error creating database tables: {str(e)}")
+            # If there's an error, try to drop all tables and recreate them
+            try:
+                db.drop_all()
+                db.create_all()
+                app.logger.info("Database tables recreated successfully")
+            except Exception as e:
+                app.logger.error(f"Fatal error initializing database: {str(e)}")
+                raise
 
 # Import routes after app and db are initialized
 import routes  # noqa: F401
