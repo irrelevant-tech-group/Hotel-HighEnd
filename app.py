@@ -72,7 +72,7 @@ with app.app_context():
             app.logger.warning("Some tables already exist, skipping creation.")
         else:
             app.logger.error(f"Error creating database tables: {str(e)}")
-            # If there's an error, try to drop all tables and recreate them
+            # If there's an error, try to drop all tables and recreate themm
             try:
                 db.drop_all()
                 db.create_all()
